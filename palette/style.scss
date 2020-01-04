@@ -16,7 +16,7 @@
     height: 48px;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.24), 0px 0px 4px rgba(0, 0, 0, 0.12);
 
-    &--navbar {
+    &-navbar {
         width: 40px;
         height: 40px;
         display: block;
@@ -26,7 +26,7 @@
         margin-right: 24px;
         padding-top: 12px;
 
-        &--item {
+        &-item {
             display: block;
             width: 23px;
             height: 2.5px;
@@ -34,7 +34,8 @@
             margin: 3px auto;
         } 
     }
-    &--logo {
+
+    &-logo {
         display: block;
         width: 18.75%;
         height: 100%;
@@ -50,7 +51,8 @@
             margin-top: 10px;
         }
     }
-    &--menu {
+
+    &-menu {
         display: block;
         width: 40px;
         height: 100%;
@@ -58,7 +60,7 @@
         margin-left: auto;
         margin-right: 10px;
 
-        &--closed {
+        &-closed {
             display: block;
             margin: 0;
             margin-top: 5px;
@@ -70,7 +72,8 @@
                 margin: 0;
             }
         }
-        &--opened {
+
+        &-opened {
             display: none;
             margin: 0;
         }
@@ -91,7 +94,6 @@
         display: flex;
         align-items: center;
         color: rgba(0, 0, 0, 0.541327);
-
     }
 
     li:hover {
@@ -194,6 +196,7 @@
         margin-left: 0;
         padding-left: 15px;
     }
+
     .input_color {
         width: 21px;
         height: 21px;
@@ -202,7 +205,7 @@
         border-radius: 40px;
         border: 1px solid #020202;
 
-        &--container {
+        &-container {
             position: relative;
             margin-left: -10px;
             margin-top: -10px;
@@ -236,5 +239,4 @@
     -webkit-box-pack: center;
     -ms-flex-pack: center;
     justify-content: center;
-
 }

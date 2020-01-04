@@ -16,7 +16,7 @@
   height: 48px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.24), 0px 0px 4px rgba(0, 0, 0, 0.12);
 }
-.header--navbar {
+.header-navbar {
   width: 40px;
   height: 40px;
   display: block;
@@ -26,20 +26,20 @@
   margin-right: 24px;
   padding-top: 12px;
 }
-.header--navbar--item {
+.header-navbar-item {
   display: block;
   width: 23px;
   height: 2.5px;
   background-color: #494646;
   margin: 3px auto;
 }
-.header--logo {
+.header-logo {
   display: block;
   width: 18.75%;
   height: 100%;
   position: relative;
 }
-.header--logo h1 {
+.header-logo h1 {
   font-family: Roboto;
   font-style: normal;
   font-weight: 500;
@@ -48,7 +48,7 @@
   color: rgba(0, 0, 0, 0.87);
   margin-top: 10px;
 }
-.header--menu {
+.header-menu {
   display: block;
   width: 40px;
   height: 100%;
@@ -56,18 +56,18 @@
   margin-left: auto;
   margin-right: 10px;
 }
-.header--menu--closed {
+.header-menu-closed {
   display: block;
   margin: 0;
   margin-top: 5px;
   height: 80%;
   width: 40px;
 }
-.header--menu--closed li {
+.header-menu-closed li {
   height: 10px;
   margin: 0;
 }
-.header--menu--opened {
+.header-menu-opened {
   display: none;
   margin: 0;
 }
@@ -181,7 +181,7 @@
   border-radius: 40px;
   border: 1px solid #020202;
 }
-.instrument_color .input_color--container {
+.instrument_color .input_color-container {
   position: relative;
   margin-left: -10px;
   margin-top: -10px;

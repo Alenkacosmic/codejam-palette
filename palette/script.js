@@ -1,8 +1,6 @@
-/* eslint-disable no-var */
-/* eslint-disable no-bitwise */
-/* eslint-disable no-use-before-define */
 /* eslint-disable no-undef */
-/* eslint-disable no-unused-vars */
+/* eslint-disable vars-on-top */
+/* eslint-disable no-var */
 const canvas = document.getElementById('switcher');
 canvas.width = 512;
 canvas.height = 512;
@@ -11,9 +9,22 @@ const scale = 4;
 const pixelWidth = 512 / scale;
 const pixelHeight = 512 / scale;
 const drawPos = [];
+const currentColor = document.getElementById('currentColor');
+const pencil = document.getElementById('pencil');
+const bucket = document.getElementById('bucket');
+const prevColor = document.getElementById('prevColor');
+const dataURL = localStorage.getItem('switcherThe');
+const choose = document.getElementById('choose');
 let pixelColor = currentColor.value;
 let previousColor = '#FFEB3B';
 
+if (dataURL !== null) {
+  const img = new Image();
+  img.src = dataURL;
+  img.onload = () => {
+    ctx.drawImage(img, 0, 0);
+  };
+}
 
 function changeCurrent(event) {
   const prevCurrentColor = pixelColor;
@@ -53,38 +64,41 @@ function changeColorOut(event) {
   pixelColor = defaultColor;
 }
 
-canvas.addEventListener('mousedown', function (e) {
-  if (choose.classList.contains('chosenInstrument')) {
-    const pos = findPos(this);
-    const x = e.pageX - pos.x;
-    const y = e.pageY - pos.y;
-    const coord = `x=${x}, y=${y}`;
-    const c = this.getContext('2d');
-    const p = c.getImageData(x, y, 1, 1).data;
-    const hex = `#${(`000000${rgbToHex(p[0], p[1], p[2])}`).slice(-6)}`;
-    currentColor.value = hex;
-    pixelColor = hex;
-    console.log(hex);
-  }
-});
-
-function findPos(obj) {
-  let curleft = 0;
-  let curtop = 0;
-  if (obj.offsetParent) {
-    do {
-      curleft += obj.offsetLeft;
-      curtop += obj.offsetTop;
-    } while (obj = obj.offsetParent);
-    return { x: curleft, y: curtop };
-  }
-  return undefined;
+function mouseForPicker(event) {
+  const x = event.offsetX;
+  const y = event.offsetY;
+  return [x, y];
 }
+
+/* formula doesnt work without bitwise */
+
 
 function rgbToHex(r, g, b) {
-  if (r > 255 || g > 255 || b > 255) { throw 'Invalid color component'; }
-  return ((r << 16) | (g << 8) | b).toString(16);
+  // eslint-disable-next-line no-bitwise
+  return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
 }
+
+function getColor(position) {
+  if (choose.classList.contains('chosenInstrument')) {
+    const x = position[0];
+    const y = position[1];
+    const color = ctx.getImageData(
+      Math.floor(x / (512 / canvas.height)),
+      Math.floor(y / (512 / canvas.width)), 1, 1,
+    ).data;
+    const newColor = rgbToHex(color[0], color[1], color[2]);
+    if (newColor !== pixelColor) {
+      currentColor.value = newColor;
+      pixelColor = newColor;
+    }
+  }
+}
+
+function chooseColor(event) {
+  getColor(mouseForPicker(event));
+}
+
+canvas.addEventListener('mousedown', chooseColor);
 
 function getMousePos(event) {
   const rect = canvas.getBoundingClientRect();
@@ -105,10 +119,29 @@ function drawImage() {
 
 function fillBucket() {
   if (bucket.classList.contains('chosenInstrument')) {
-    canvas.removeEventListener('mousedown', startDrawing);
     ctx.fillStyle = currentColor.value;
-    ctx.fillRect(0, 0, 512, 512);
+    drawPos.fill(ctx.fillStyle);
+    ctx.fillRect(0, 0, pixelWidth * scale, pixelHeight * scale);
   }
+}
+
+/* use "var" cause it gives me way to use variable outside the function */
+
+function startDrawing(event) {
+  if (event.button === 0 && pencil.classList.contains('chosenInstrument')) {
+    var mark = setInterval(() => {
+      var pos = mouse;
+      if (pos.color !== currentColor.value) {
+        pos.color = currentColor.value;
+        drawPos.push(pos);
+      }
+    }, 10);
+  }
+  function stopDrawing() {
+    // eslint-disable-next-line block-scoped-var
+    clearInterval(mark);
+  }
+  canvas.addEventListener('mouseup', stopDrawing);
 }
 
 function chooseInstrument(event) {
@@ -143,34 +176,24 @@ function chooseInstrument(event) {
   }
 }
 
+/* use undef cause that gives me way to use mouse outside the function and before it's assigent */
+
 function recordMouseMovement(event) {
   mouse = getMousePos(event);
 }
 
-function startDrawing(event) {
-  if (event.button === 0 && pencil.classList.contains('chosenInstrument')) {
-    var mark = setInterval(() => {
-      const pos = mouse;
-      if (pos.color !== currentColor.value) {
-        pos.color = currentColor.value;
-        drawPos.push(pos);
-      }
-    }, 10);
-  }
-  function stopDrawing(event) {
-    clearInterval(mark);
-  }
-  canvas.addEventListener('mouseup', stopDrawing);
-}
+canvas.addEventListener('click', () => {
+  localStorage.setItem('switcherThe', canvas.toDataURL());
+});
 
 canvas.addEventListener('mousemove', recordMouseMovement);
 canvas.addEventListener('mousedown', startDrawing);
 canvas.addEventListener('mousemove', drawImage);
 canvas.addEventListener('mousedown', fillBucket);
 
-instruments.addEventListener('click', chooseInstrument);
+document.getElementById('instruments').addEventListener('click', chooseInstrument);
 document.addEventListener('keyup', chooseInstrument);
 
-colours.addEventListener('mouseup', changeColorOut);
+document.getElementById('colours').addEventListener('mouseup', changeColorOut);
 
-currentColor.addEventListener('input', changeCurrent);
+document.getElementById('currentColor').addEventListener('input', changeCurrent);
